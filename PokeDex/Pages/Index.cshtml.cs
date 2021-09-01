@@ -95,7 +95,7 @@ namespace PokeDex.Pages
 
                 ViewData["InitData"] = new
                 {
-                    apiResponse // same as doing **pokemans = pokemans**
+                    apiResponse
                 };
             }
             else
