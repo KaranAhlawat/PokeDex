@@ -89,10 +89,11 @@
                 debugger;
                 if (searchBox.value !== "") {
                     const target = searchBox.value.toLowerCase()
+                    const [pokeman] = pokemansArr.filter(p => p.name.toLowerCase() === target)
+
+                    if (pokeman === undefined) return;
 
                     clearGrid()
-
-                    const [pokeman] = pokemansArr.filter(p => p.name.toLowerCase() === target)
                     const card = buildPokemanCard(pokeman)
                     cardGrid.appendChild(card)
                 }
