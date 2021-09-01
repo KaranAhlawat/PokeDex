@@ -85,18 +85,21 @@
 
                 const searchBox = document.querySelector("#search-box")
                 const cardGrid = document.querySelector(".card__grid")
+                let pokemans = pokemansArr;
 
                 debugger;
                 if (searchBox.value !== "") {
                     const target = searchBox.value.toLowerCase()
-                    const [pokeman] = pokemansArr.filter(p => p.name.toLowerCase() === target)
+                    pokemans = pokemans.filter(p => p.name.toLowerCase().includes(target))
 
-                    if (pokeman === undefined) return;
-
-                    clearGrid()
-                    const card = buildPokemanCard(pokeman)
-                    cardGrid.appendChild(card)
+                    if (pokemans === undefined) return;
                 }
+
+				clearGrid()
+				pokemans.forEach(item => {
+					const card = buildPokemanCard(item)
+					cardGrid.appendChild(card)
+				})
             }
 
             function clearGrid() {

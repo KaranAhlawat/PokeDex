@@ -20,7 +20,6 @@ namespace PokeDex.Pages
 
         private readonly string pokeUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
 
-        private List<Pokeman> _pokemen { get; set; } = new List<Pokeman>();
         public List<Pokeman> Pokemon { get; set; } = new List<Pokeman>();
 
         [BindProperty(SupportsGet = true)]
