@@ -1,0 +1,28 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "Home";
+}
+
+<head>
+ <link rel="stylesheet" href="~/css/Index.cshtml.css" />
+</head>
+
+<div>
+ <header class="hero">
+  <h1 class="hero__heading">PokeDex - The Pokemon Encyclopedia</h1>
+  <form>
+   <div class="hero__search-section">
+	<input class="hero__search" type="text" placeholder="Search Pokemon" asp-for="@Model.SearchString"/>
+	<input class="hero__buttn" type="submit" value="Search" /> 
+   </div>
+  </form>
+ </header>
+
+ <div class="card__grid">
+	@foreach (var pokeman in Model.Pokemon)
+	{
+	  <partial name="Partials/_PokeCard.cshtml" model="pokeman" />
+	}
+ </div>
+</div>

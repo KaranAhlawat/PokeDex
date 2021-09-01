@@ -1,0 +1,14 @@
+﻿@model PokeDex.Models.Pokeman
+@{
+}
+
+<head>
+ <link rel="stylesheet" href="~/css/_PokeCard.cshtml.css" />
+</head>
+
+<div class="card">
+ <a href="@Model.Url">
+  <img class="card__image" src=@Model.Image alt="pokemon" />
+  <p class="card__name">@Model.Id. @Model.Name</p>
+ </a>
+</div>

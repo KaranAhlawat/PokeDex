@@ -1,0 +1,16 @@
+﻿.hero {
+    text-align: center;
+    margin: 3rem auto 0.5rem auto;
+}
+
+.hero__heading {
+    font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
+    font-size: 3rem;
+}
+
+.hero__text {
+    margin: 1rem;
+    font-family: 'Lato';
+    font-size: 1.25rem;
+}
