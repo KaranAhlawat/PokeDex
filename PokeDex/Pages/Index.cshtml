@@ -1,28 +1,115 @@
 ﻿@page
 @model IndexModel
 @{
-	ViewData["Title"] = "Home";
+    ViewData["Title"] = "Home";
 }
 
 <head>
- <link rel="stylesheet" href="~/css/Index.cshtml.css" />
+    <link rel="stylesheet" href="~/css/Index.cshtml.css" />
+    <link rel="stylesheet" href="~/css/_PokeCard.cshtml.css" />
 </head>
 
 <div>
- <header class="hero">
-  <h1 class="hero__heading">PokeDex - The Pokemon Encyclopedia</h1>
-  <form>
-   <div class="hero__search-section">
-	<input class="hero__search" type="text" placeholder="Search Pokemon" asp-for="@Model.SearchString"/>
-	<input class="hero__buttn" type="submit" value="Search" /> 
-   </div>
-  </form>
- </header>
+    <header class="hero">
+        <h1 class="hero__heading">PokeDex - The Pokemon Encyclopedia</h1>
+        <form>
+            <div class="hero__search-section">
+                <input id="search-box" class="hero__search" type="text" placeholder="Search Pokemon" />
+                <input id="search-button" class="hero__buttn" type="submit" value="Search" />
+            </div>
+        </form>
+    </header>
 
- <div class="card__grid">
-	@foreach (var pokeman in Model.Pokemon)
-	{
-	  <partial name="Partials/_PokeCard.cshtml" model="pokeman" />
-	}
- </div>
+    <div class="card__grid">
+        @*@foreach (var pokeman in Model.Pokemon)
+            {
+              <partial name="Partials/_PokeCard.cshtml" model="pokeman" />
+            }*@
+    </div>
+
+    <script>
+        @*<div class="card">
+             <a href="@Model.Url">
+              <img class="card__image" src=@Model.Image alt="pokemon" />
+              <p class="card__name">@Model.Id. @Model.Name</p>
+             </a>
+        </div>*@
+        (function () {
+            const INIT_DATA = @Html.Raw(Json.Serialize(ViewBag.InitData));
+            const pokemansArr = INIT_DATA.apiResponse.results
+
+            initPokeman()
+
+            function initPokeman() {
+
+                const cardGrid = document.querySelector(".card__grid")
+                const searchBtn = document.querySelector("#search-button")
+
+                const pokeCards = pokemansArr.map(pokeman => {
+                    return buildPokemanCard(pokeman)
+                })
+
+                pokeCards.forEach(card => cardGrid.append(card))
+                searchBtn.addEventListener("click", handleSearch)
+
+            }
+
+            function buildPokemanCard(obj) {
+
+                const cardDiv = document.createElement("div")
+                const cardLink = document.createElement("a")
+                const cardImg = document.createElement("img")
+                const cardName = document.createElement("p")
+
+                cardDiv.classList.add("card")
+                cardImg.classList.add("card__image")
+                cardName.classList.add("card__name")
+
+                cardLink.setAttribute("href", obj.url)
+                cardImg.setAttribute("src", obj.image)
+                cardImg.setAttribute("alt", "pokemon")
+
+                cardName.textContent = `${obj.id} ${obj.name}`
+
+                cardLink.appendChild(cardImg)
+                cardLink.appendChild(cardName)
+
+                cardDiv.appendChild(cardLink)
+
+                return cardDiv
+
+            }
+
+            function handleSearch(e) {
+                e.preventDefault()
+
+                const searchBox = document.querySelector("#search-box")
+                const cardGrid = document.querySelector(".card__grid")
+
+                debugger;
+                if (searchBox.value !== "") {
+                    const target = searchBox.value.toLowerCase()
+                    const [pokeman] = pokemansArr.filter(p => p.name.toLowerCase() === target)
+
+                    if (pokeman === undefined) return;
+
+                    clearGrid()
+                    const card = buildPokemanCard(pokeman)
+                    cardGrid.appendChild(card)
+                }
+            }
+
+            function clearGrid() {
+                const cardGrid = document.querySelector(".card__grid")
+
+                while (cardGrid.firstChild) {
+                    cardGrid.removeChild(cardGrid.firstChild)
+                }
+            }
+
+        })()
+
+
+    </script>
+
 </div>

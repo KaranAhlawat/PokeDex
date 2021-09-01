@@ -26,45 +26,82 @@ namespace PokeDex.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchString { get; set; }
 
+        //public async Task OnGetAsync()
+        //{
+        //    HttpClient httpClient = _httpClientFactory.CreateClient();
+        //    try
+        //    {
+        //        HttpResponseMessage httpResponse = await httpClient.GetAsync(pokeUrl);
+        //        using (JsonDocument content = await JsonDocument.ParseAsync(await httpResponse.Content.ReadAsStreamAsync()))
+        //        {
+
+
+        //            JsonElement results = content.RootElement.GetProperty("results");
+
+        //            int i = 1;
+
+        //            foreach (var element in results.EnumerateArray())
+        //            {
+        //                _pokemen.Add(new Pokeman
+        //                {
+        //                    Id = i,
+        //                    Name = element.GetProperty("name").ToString(),
+        //                    Url = element.GetProperty("url").ToString(),
+        //                    Image = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{i}.png"
+        //                });
+
+        //                i++;
+        //            }
+        //        }
+
+        //        if (!string.IsNullOrEmpty(SearchString))
+        //        {
+        //            _pokemen = _pokemen.Where(x => x.Name.Contains(SearchString, System.StringComparison.OrdinalIgnoreCase)).ToList();
+        //        }
+        //    }
+        //    catch (HttpRequestException e)
+        //    {
+        //        _logger.LogError(e.ToString());
+        //    }
+
+        //    Pokemon = _pokemen;
+
+        //}
         public async Task OnGetAsync()
         {
             HttpClient httpClient = _httpClientFactory.CreateClient();
-            try
+            HttpResponseMessage httpResponse = await httpClient.GetAsync(pokeUrl);
+
+            APIResponse apiResponse;
+
+            if (httpResponse.IsSuccessStatusCode)
             {
-                HttpResponseMessage httpResponse = await httpClient.GetAsync(pokeUrl);
-                using (JsonDocument content = await JsonDocument.ParseAsync(await httpResponse.Content.ReadAsStreamAsync()))
+                var options = new JsonSerializerOptions
                 {
+                    PropertyNameCaseInsensitive = true
+                };
 
+                string responseText = await httpResponse.Content.ReadAsStringAsync();
+                apiResponse = JsonSerializer.Deserialize<APIResponse>(responseText, options);
 
-                    JsonElement results = content.RootElement.GetProperty("results");
+                int i = 1;
+                foreach(Pokeman p in apiResponse.Results)
+                {
+                    p.Id = i;
+                    p.Image = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{i}.png";
 
-                    int i = 1;
-
-                    foreach (var element in results.EnumerateArray())
-                    {
-                        _pokemen.Add(new Pokeman
-                        {
-                            Id = i,
-                            Name = element.GetProperty("name").ToString(),
-                            Url = element.GetProperty("url").ToString(),
-                            Image = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{i}.png"
-                        });
-
-                        i++;
-                    }
+                    i++;
                 }
 
-                if (!string.IsNullOrEmpty(SearchString))
+                ViewData["InitData"] = new
                 {
-                    _pokemen = _pokemen.Where(x => x.Name.Contains(SearchString, System.StringComparison.OrdinalIgnoreCase)).ToList();
-                }
+                    apiResponse
+                };
             }
-            catch (HttpRequestException e)
+            else
             {
-                _logger.LogError(e.ToString());
+                _logger.LogError(httpResponse.ReasonPhrase);
             }
-
-            Pokemon = _pokemen;
 
         }
 
