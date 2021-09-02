@@ -103,10 +103,5 @@ namespace PokeDex.Pages
             }
 
         }
-
-        public void HandleSearch()
-        {
-            _logger.LogInformation("Logging search");
-        }
     }
 }
